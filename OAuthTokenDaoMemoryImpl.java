@@ -1,85 +1,30 @@
 package com.google.oauthsample;
 
-import ...
+import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
 
 /**
- * Object representation of an OAuth properties file.
+ * Allows easy storage and access of authorization tokens.
  */
-public class OAuthProperties {
-
-  public static final String DEFAULT_OAUTH_PROPERTIES_FILE_NAME = "oauth.properties";
-
-  /** The OAuth 2.0 Client ID */
-  private String clientId;
-
-  /** The OAuth 2.0 Client Secret */
-  private String clientSecret;
-
-  /** The Google APIs scopes to access */
-  private String scopes;
+public interface OAuthTokenDao {
 
   /**
-   * Instantiates a new OauthProperties object reading its values from the
-   * {@code OAUTH_PROPERTIES_FILE_NAME} properties file.
+   * Stores the given AccessTokenResponse using the {@code username}, the OAuth
+   * {@code clientID} and the tokens scopes as keys.
    *
-   * @throws IOException IF there is an issue reading the {@code propertiesFile}
-   * @throws OauthPropertiesFormatException If the given {@code propertiesFile}
-   *           is not of the right format (does not contains the keys {@code
-   *           clientId}, {@code clientSecret} and {@code scopes})
+   * @param tokens The AccessTokenResponse to store
+   * @param userName The userName associated wit the token
    */
-  public OAuthProperties() throws IOException {
-    this(OAuthProperties.class.getResourceAsStream(DEFAULT_OAUTH_PROPERTIES_FILE_NAME));
-  }
+  public void saveKeys(AccessTokenResponse tokens, String userName);
 
   /**
-   * Instantiates a new OauthProperties object reading its values from the given
-   * properties file.
+   * Returns the AccessTokenResponse stored for the given username, clientId and
+   * scopes. Returns {@code null} if there is no AccessTokenResponse for this
+   * user and scopes.
    *
-   * @param propertiesFile the InputStream to read an OAuth Properties file. The
-   *          file should contain the keys {@code clientId}, {@code
-   *          clientSecret} and {@code scopes}
-   * @throws IOException IF there is an issue reading the {@code propertiesFile}
-   * @throws OAuthPropertiesFormatException If the given {@code propertiesFile}
-   *           is not of the right format (does not contains the keys {@code
-   *           clientId}, {@code clientSecret} and {@code scopes})
+   * @param userName The username of which to get the stored AccessTokenResponse
+   * @return The AccessTokenResponse of the given username
    */
-  public OAuthProperties(InputStream propertiesFile) throws IOException {
-    Properties oauthProperties = new Properties();
-    oauthProperties.load(propertiesFile);
-    clientId = oauthProperties.getProperty("clientId");
-    clientSecret = oauthProperties.getProperty("clientSecret");
-    scopes = oauthProperties.getProperty("scopes");
-    if ((clientId == null) || (clientSecret == null) || (scopes == null)) {
-      throw new OAuthPropertiesFormatException();
-    }
-  }
-
-  /**
-   * @return the clientId
-   */
-  public String getClientId() {
-    return clientId;
-  }
-
-  /**
-   * @return the clientSecret
-   */
-  public String getClientSecret() {
-    return clientSecret;
-  }
-
-  /**
-   * @return the scopes
-   */
-  public String getScopesAsString() {
-    return scopes;
-  }
-
-  /**
-   * Thrown when the OAuth properties file was not at the right format, i.e not
-   * having the right properties names.
-   */
-  @SuppressWarnings("serial")
-  public class OAuthPropertiesFormatException extends RuntimeException {
-  }
+  public AccessTokenResponse getKeys(String userName);
+    return userName;
 }
+
