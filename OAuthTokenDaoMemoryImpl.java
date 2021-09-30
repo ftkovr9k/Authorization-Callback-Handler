@@ -1,30 +1,22 @@
 package com.google.oauthsample;
 
 import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
+...
 
 /**
- * Allows easy storage and access of authorization tokens.
+ * Quick and Dirty memory implementation of {@link OAuthTokenDao} based on
+ * HashMaps.
  */
-public interface OAuthTokenDao {
+public class OAuthTokenDaoMemoryImpl implements OAuthTokenDao {
 
-  /**
-   * Stores the given AccessTokenResponse using the {@code username}, the OAuth
-   * {@code clientID} and the tokens scopes as keys.
-   *
-   * @param tokens The AccessTokenResponse to store
-   * @param userName The userName associated wit the token
-   */
-  public void saveKeys(AccessTokenResponse tokens, String userName);
+  /** Object where all the Tokens will be stored */
+  private static Map tokenPersistance = new HashMap();
 
-  /**
-   * Returns the AccessTokenResponse stored for the given username, clientId and
-   * scopes. Returns {@code null} if there is no AccessTokenResponse for this
-   * user and scopes.
-   *
-   * @param userName The username of which to get the stored AccessTokenResponse
-   * @return The AccessTokenResponse of the given username
-   */
-  public AccessTokenResponse getKeys(String userName);
-    return userName;
+  public void saveKeys(AccessTokenResponse tokens, String userName) {
+    tokenPersistance.put(userName, tokens);
+  }
+
+  public AccessTokenResponse getKeys(String userName) {
+    return tokenPersistance.get(userName);
+  }
 }
-
